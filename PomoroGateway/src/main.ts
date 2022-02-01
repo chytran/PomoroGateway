@@ -13,6 +13,7 @@ class BasicDemoWorld {
     }
 
     _Initialize() {
+        // RENDERER
         this._threeJS = new THREE.WebGLRenderer();
         this._threeJS.shadowMap.enabled = true;
         this._threeJS.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -20,6 +21,12 @@ class BasicDemoWorld {
         this._threeJS.setSize(this.w / this.h);
 
         document.body.appendChild(this._threeJS.domElement);
+
+        // CAMERA
+
+        // SCENE
+
+        // LIGHTING
     }
 }
 
