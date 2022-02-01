@@ -6,6 +6,8 @@ class BasicDemoWorld {
     public _camera: any;
     public _scene: any;
     public _light: any;
+    public _loader: any;
+    public _texture: any;
 
     // Window dimension
     public w: number = window.innerWidth;
@@ -57,6 +59,23 @@ class BasicDemoWorld {
 
         // add light to scene 
         this._scene.add(this._light);
+
+        // Ambient Light
+        this._light = new THREE.AmbientLight(0x101010);
+        this._scene.add(this._light);
+
+        // Background 360 view
+        this._loader = new THREE.CubeTextureLoader();
+        this._texture = this._loader.load([
+            '../image/bluecloud_ft.jpg',
+            '../image/bluecloud_bk.jpg',
+            '../image/bluecloud_up.jpg',
+            '../image/bluecloud_dn.jpg',
+            '../image/bluecloud_rt.jpg',
+            '../image/bluecloud_lf.jpg',
+        ]);
+
+        this._scene.background = this._texture;
 
         // Load
         // this._LoadAnimateModel();
