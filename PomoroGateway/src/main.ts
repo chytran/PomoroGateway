@@ -67,15 +67,15 @@ class BasicDemoWorld {
         // Background 360 view
         this._loader = new THREE.CubeTextureLoader();
         this._texture = this._loader.load([
-            '../image/bluecloud_ft.jpg',
-            '../image/bluecloud_bk.jpg',
-            '../image/bluecloud_up.jpg',
-            '../image/bluecloud_dn.jpg',
-            '../image/bluecloud_rt.jpg',
-            '../image/bluecloud_lf.jpg',
+            '/image/bluecloud_ft.jpg',
+            '/image/bluecloud_bk.jpg',
+            '/image/bluecloud_up.jpg',
+            '/image/bluecloud_dn.jpg',
+            '/image/bluecloud_rt.jpg',
+            '/image/bluecloud_lf.jpg',
         ]);
 
-        this._scene.background = this._texture;
+        this._scene.background = 0xFFFFFF;
 
         // Load
         // this._LoadAnimateModel();
