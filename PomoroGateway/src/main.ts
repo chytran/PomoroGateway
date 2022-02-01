@@ -27,10 +27,10 @@ class BasicDemoWorld {
     _Initialize() {
         // RENDERER
         this._threeJS = new THREE.WebGLRenderer();
-        this._threeJS.shadowMap.enabled = true;
-        this._threeJS.shadowMap.type = THREE.PCFSoftShadowMap;
-        this._threeJS.setPixelRatio(window.devicePixelRatio);
-        this._threeJS.setSize(this.w / this.h);
+		this._threeJS.shadowMap.enabled = true;
+		this._threeJS.shadowMap.type = THREE.PCFSoftShadowMap;
+		this._threeJS.setPixelRatio(window.devicePixelRatio);
+		this._threeJS.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(this._threeJS.domElement);
 
@@ -43,7 +43,7 @@ class BasicDemoWorld {
 
         // LIGHTING
         this._light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-        this._light.position.set(20, 100, 0) // x, y, z
+        this._light.position.set(20, 100, 0); // x, y, z
         this._light.target.position.set(0, 0, 0);
         this._light.castShadow = true;
         this._light.shadow.bias = -0.001;
@@ -65,17 +65,17 @@ class BasicDemoWorld {
         this._scene.add(this._light);
 
         // Background 360 view
-        this._loader = new THREE.CubeTextureLoader();
-        this._texture = this._loader.load([
-            '/image/bluecloud_ft.jpg',
-            '/image/bluecloud_bk.jpg',
-            '/image/bluecloud_up.jpg',
-            '/image/bluecloud_dn.jpg',
-            '/image/bluecloud_rt.jpg',
-            '/image/bluecloud_lf.jpg',
-        ]);
+        // this._loader = new THREE.CubeTextureLoader();
+        // this._texture = this._loader.load([
+        //     '/image/bluecloud_ft.jpg',
+        //     '/image/bluecloud_bk.jpg',
+        //     '/image/bluecloud_up.jpg',
+        //     '/image/bluecloud_dn.jpg',
+        //     '/image/bluecloud_rt.jpg',
+        //     '/image/bluecloud_lf.jpg',
+        // ]);
 
-        this._scene.background = 0xFFFFFF;
+        // this._scene.background = 0xFFFFFF;
 
         // Load
         // this._LoadAnimateModel();
