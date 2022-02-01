@@ -50,7 +50,7 @@ class BasicWorldDemo {
       light.shadow.camera.bottom = -100;
       this._scene.add(light);
   
-      light = new THREE.AmbientLight(0x101010);
+      light = new THREE.AmbientLight(0xFFFFFF, 2.4);
       this._scene.add(light);
   
       const controls = new OrbitControls(
@@ -60,19 +60,19 @@ class BasicWorldDemo {
   
       const loader = new THREE.CubeTextureLoader();
       const texture = loader.load([
-          './resources/posx.jpg',
-          './resources/negx.jpg',
-          './resources/posy.jpg',
-          './resources/negy.jpg',
-          './resources/posz.jpg',
-          './resources/negz.jpg',
+        '/image/bluecloud_ft.jpg',
+        '/image/bluecloud_bk.jpg',
+        '/image/bluecloud_up.jpg',
+        '/image/bluecloud_dn.jpg',
+        '/image/bluecloud_rt.jpg',
+        '/image/bluecloud_lf.jpg',
       ]);
       this._scene.background = texture;
   
       const plane = new THREE.Mesh(
           new THREE.PlaneGeometry(100, 100, 10, 10),
           new THREE.MeshStandardMaterial({
-              color: 0xFFFFFF,
+              color: 0x202020,
             }));
       plane.castShadow = false;
       plane.receiveShadow = true;
@@ -107,7 +107,7 @@ class BasicWorldDemo {
   
         const anim = new FBXLoader();
         anim.setPath('./resources/zombie/');
-        anim.load('walk.fbx', (anim) => {
+        anim.load('hiphop.fbx', (anim) => {
           const m = new THREE.AnimationMixer(fbx);
           this._mixers.push(m);
           const idle = m.clipAction(anim.animations[0]);
@@ -135,9 +135,9 @@ class BasicWorldDemo {
   
     _RAF() {
       requestAnimationFrame((t) => {
-        if (this._previousRAF === null) {
-          this._previousRAF = t;
-        }
+        // if (this._previousRAF === null) {
+        //   this._previousRAF = t;
+        // }
         this._RAF();
 
         this._threejs.render(this._scene, this._camera);
@@ -151,7 +151,7 @@ class BasicWorldDemo {
       if (this._mixers) {
         this._mixers.map(m => m.update(timeElapseds));
       }
-      console.log(timeElapseds);
+      // console.log(timeElapseds);
 
       // if (this._controls) {
       //   this._controls.Update(timeElapsed);
