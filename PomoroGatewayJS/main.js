@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
 class BasicDemoWorld {
 
@@ -67,7 +68,38 @@ class BasicDemoWorld {
 
 		this._scene.background = texture;
 
+		const plane = new THREE.Mesh(
+            new THREE.PlaneGeometry(500, 500, 500, 500),
+            new THREE.MeshStandardMaterial({
+                color: 0xFFFFFF
+        }));
+        plane.castShadow = true;
+        plane.receiveShadow = true;
+        plane.rotation.x = -Math.PI / 2;
+        this._scene.add(plane);
+
+		this._LoadAnimationModel();
 		this._RAF();
+	}
+
+	_LoadAnimationModel() {
+		const loader = new FBXLoader();
+		loader.setPath('/models/');
+		loader.load('boy.fbx', (fbx) => {
+			fbx.scale.setScalar(0.15);
+			fbx.traverse(c => {
+				c.castShadow = true;
+			});
+
+			const anim = new FBXLoader();
+			anim.setPath('/models/animations/');
+			anim.load('idle.fbx', (anim) => {
+				this._mixer = new THREE.AnimationMixer(fbx);
+				const idle = this._mixer.clipAction(anim.animations[0]);
+				idle.play();
+			});
+			this._scene.add(fbx);
+		});
 	}
 
 	_OnWindowResize() {
