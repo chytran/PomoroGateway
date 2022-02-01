@@ -1,11 +1,9 @@
-import * as THREE from 'three';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
 
 class BasicDemoWorld {
-
-	constructor()
-	{
+	constructor() {
 		this._Initialize();
 	}
 
@@ -27,7 +25,7 @@ class BasicDemoWorld {
 		const near = 0.1;
 		const far = 1000;
 		this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-		this._camera.position.set(75,20,0);
+		this._camera.position.set(75,30,300);
 
 		this._scene = new THREE.Scene();
 
@@ -52,9 +50,9 @@ class BasicDemoWorld {
         this._scene.add(light);
 
 		// Orbit Controls
-		const controls = new OrbitControls(this._camera, this._threeJS.domElement);
-		controls.target.set(0, 20, 0);
-		controls.update();
+		// const controls = new OrbitControls(this._camera, this._threeJS.domElement);
+		// controls.target.set(0, 20, 0);
+		// controls.update();
 
 		const loader = new THREE.CubeTextureLoader();
 		const texture = loader.load([
@@ -82,18 +80,24 @@ class BasicDemoWorld {
 		this._RAF();
 	}
 
+	
+	
+	
+	
 	_LoadAnimationModel() {
 		const loader = new FBXLoader();
-		loader.setPath('/models/');
-		loader.load('boy.fbx', (fbx) => {
-			fbx.scale.setScalar(0.15);
+		loader.setPath('/resources/dancer/');
+		loader.load('dancer.fbx', (fbx) => {
+			fbx.scale.setScalar(0.5);
 			fbx.traverse(c => {
-				c.castShadow = true;
+				c.castShadow = false;
 			});
 
 			const anim = new FBXLoader();
-			anim.setPath('/models/animations/');
-			anim.load('idle.fbx', (anim) => {
+			anim.setPath('/resources/dancer/');
+			// console.log(anim.setPath('./resources/zombie/'));
+			anim.load('dance.fbx', (anim) => {
+				// console.log("dance should be loading");
 				this._mixer = new THREE.AnimationMixer(fbx);
 				const idle = this._mixer.clipAction(anim.animations[0]);
 				idle.play();
