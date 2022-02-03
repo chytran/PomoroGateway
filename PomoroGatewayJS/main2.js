@@ -4,6 +4,30 @@ import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 
+class CharacterController {
+	constructor()
+	{
+		this._input = new CharacterControllerInput();
+		this._stateMachine = new FiniteStateMachine();
+
+		this._LoadModels();
+	}
+}
+
+class CharacterControllerInput {
+	constructor() 
+	{
+
+	}
+}
+
+class FiniteStateMachine {
+	constructor()
+	{
+
+	}
+}
+
 class BasicWorldDemo {
     constructor() {
       this._Initialize();
@@ -116,6 +140,10 @@ class BasicWorldDemo {
         this._scene.add(fbx);
       });
     }
+
+	_LoadModels() {
+		const loader = new FBXLoader();
+	}
 
     _LoadModel() {
         const loader = new GLTFLoader();
