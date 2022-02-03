@@ -8,7 +8,7 @@ class CharacterController {
 	constructor()
 	{
 		this._input = new CharacterControllerInput();
-		this._stateMachine = new FiniteStateMachine();
+		this._stateMachine = new FiniteStateMachine(new BasicCharacterControllerProxy(this));
 
 		this._LoadModels();
 	}
@@ -17,7 +17,66 @@ class CharacterController {
 class CharacterControllerInput {
 	constructor() 
 	{
+		this._Init();
+	}
 
+	_Init() {
+		this._key = {
+			forward: false,
+			background: false,
+			left: false,
+			right: false,
+			space: false,
+			shift: false
+		};
+		document.getElementById("keydown", (e) => this._onKeyDown(e), false);
+		document.getElementById("keyup", (e) => this._onKeyUp(e), false);
+	}
+
+	_onKeyDown(event) {
+		switch (event.keyCode) {
+			case 87: // w
+				this._keys.forward = true;
+				break;
+			case 65: // a
+				this._keys.left = true;
+				break;
+			case 83: // s
+				this._keys.backward = true;
+				break;
+			case 68: // d 
+				this._keys.right = true;
+				break;
+			case 32: // space
+				this._keys.space = true;
+				break;
+			case 16: // Shift
+				this._keys.shift = true;
+				break;
+		}
+	}
+
+	_onKeyUp(event) {
+		switch (event.keyCode) {
+			case 87: // w
+				this._keys.forward = false;
+				break;
+			case 65: // a
+				this._keys.left = false;
+				break;
+			case 83: // s
+				this._keys.backward = false;
+				break;
+			case 68: // d 
+				this._keys.right = false;
+				break;
+			case 32: // space
+				this._keys.space = false;
+				break;
+			case 16: // Shift
+				this._keys.shift = false;
+				break;
+		}
 	}
 }
 
@@ -143,6 +202,40 @@ class BasicWorldDemo {
 
 	_LoadModels() {
 		const loader = new FBXLoader();
+		loader.setPath('./resources/zombie/');
+		loader.load('mremireh_o_desbiens.fbx', (fbx) => {
+			fbx.scale.setScalar(0.1);
+			fbx.traverse(c => {
+				c.castShadow = true;
+			});
+	
+			this._target = fbx;
+			this._params.scene.add(this._target);
+
+			this._mixer = new THREE.AnimationMixer(this._target);
+
+			this._manager = new THREE.LoadingManager();
+			this._manager.onLoad = () => {
+				this._fsm.SetState('idle');
+			};
+
+			const _OnLoad= (animName, anim) => {
+				const clip = anim.animations[0];
+				const action = this._mixer.clipAction(clip);
+
+				this._animations[animName] = {
+					clip: clip,
+					action: action,
+				};
+			};
+
+			const loader = new FBXLoader(this._manager);
+			loader.setPath("./resources/zombie/");
+			loader.load('walk.fbx', (a) => { _OnLoad('walk', a); })
+			loader.load('run.fbx', (a) => { _OnLoad('run', a); })
+			loader.load('idle.fbx', (a) => { _OnLoad('idle', a); })
+			loader.load('dance.fbx', (a) => { _OnLoad('dance', a); })
+      });
 	}
 
     _LoadModel() {
