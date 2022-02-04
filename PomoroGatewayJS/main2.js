@@ -190,7 +190,7 @@ class BasicWorldDemo {
   
         const anim = new FBXLoader();
         anim.setPath('./resources/zombie/');
-        anim.load('hiphop.fbx', (anim) => {
+        anim.load('run.fbx', (anim) => {
           const m = new THREE.AnimationMixer(fbx);
           this._mixers.push(m);
           const idle = m.clipAction(anim.animations[0]);
@@ -203,7 +203,7 @@ class BasicWorldDemo {
 	_LoadModels() {
 		const loader = new FBXLoader();
 		loader.setPath('./resources/zombie/');
-		loader.load('mremireh_o_desbiens.fbx', (fbx) => {
+		loader.load('boy.fbx', (fbx) => {
 			fbx.scale.setScalar(0.1);
 			fbx.traverse(c => {
 				c.castShadow = true;
