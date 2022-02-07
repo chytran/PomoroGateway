@@ -74,6 +74,18 @@ class BasicCharacterController {
     });
   }
 
+  
+  get Position() {
+    return this._position;
+  }
+
+  get Rotation() {
+    if (!this._target) {
+      return new THREE.Quaternion();
+    }
+    return this._target.quaternion;
+  }
+
   Update(timeInSeconds) {
     if (!this._target) {
       return;
@@ -549,10 +561,6 @@ class CharacterControllerDemo {
     light = new THREE.AmbientLight(0xFFFFFF, 0.25);
     this._scene.add(light);
 
-    const controls = new OrbitControls(
-      this._camera, this._threejs.domElement);
-    controls.target.set(0, 10, 0);
-    controls.update();
 
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
@@ -659,7 +667,9 @@ class CharacterControllerDemo {
       this._controls.Update(timeElapsedS);
     }
 
-    // this._thirdPersonCamera.Update(timeElapsedS);
+    if (this._thirdPersonCamera.Update(timeElapsedS)) {
+      console.log("it's working");
+    }
   }
 }
 

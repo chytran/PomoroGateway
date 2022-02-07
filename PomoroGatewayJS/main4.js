@@ -512,7 +512,7 @@ class ThirdPersonCamera {
 }
 
 
-class ThirdPersonCameraDemo {
+class PomoroGateway {
   constructor() {
     this._Initialize();
   }
@@ -564,13 +564,13 @@ class ThirdPersonCameraDemo {
 
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
-        './resources/posx.jpg',
-        './resources/negx.jpg',
-        './resources/posy.jpg',
-        './resources/negy.jpg',
-        './resources/posz.jpg',
-        './resources/negz.jpg',
-    ]);
+        '/image/bluecloud_ft.jpg',
+        '/image/bluecloud_bk.jpg',
+        '/image/bluecloud_up.jpg',
+        '/image/bluecloud_dn.jpg',
+        '/image/bluecloud_rt.jpg',
+        '/image/bluecloud_lf.jpg',
+      ]);
     texture.encoding = THREE.sRGBEncoding;
     this._scene.background = texture;
 
@@ -635,6 +635,7 @@ class ThirdPersonCameraDemo {
     }
 
     this._thirdPersonCamera.Update(timeElapsedS);
+    
   }
 }
 
@@ -642,5 +643,5 @@ class ThirdPersonCameraDemo {
 let _APP = null;
 
 window.addEventListener('DOMContentLoaded', () => {
-  _APP = new ThirdPersonCameraDemo();
+  _APP = new PomoroGateway();
 });
