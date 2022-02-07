@@ -2,7 +2,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 
 import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/GLTFLoader.js';
-import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 
 
 class BasicCharacterControllerProxy {
@@ -24,8 +23,8 @@ class BasicCharacterController {
   _Init(params) {
     this._params = params;
     this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
-    this._acceleration = new THREE.Vector3(1, 0.25, 75.0);
-    this._velocity = new THREE.Vector3(0, 0, 1);
+    this._acceleration = new THREE.Vector3(1, 0.25, 50.0);
+    this._velocity = new THREE.Vector3(0, 0, 0);
     this._position = new THREE.Vector3();
 
     this._animations = {};
@@ -74,8 +73,19 @@ class BasicCharacterController {
     });
   }
 
-  Update(timeInSeconds) {
+  get Position() {
+    return this._position;
+  }
+
+  get Rotation() {
     if (!this._target) {
+      return new THREE.Quaternion();
+    }
+    return this._target.quaternion;
+  }
+
+  Update(timeInSeconds) {
+    if (!this._stateMachine._currentState) {
       return;
     }
 
@@ -143,7 +153,7 @@ class BasicCharacterController {
     controlObject.position.add(forward);
     controlObject.position.add(sideways);
 
-    oldPosition.copy(controlObject.position);
+    this._position.copy(controlObject.position);
 
     if (this._mixer) {
       this._mixer.update(timeInSeconds);
@@ -461,6 +471,7 @@ class IdleState extends State {
   }
 };
 
+
 class ThirdPersonCamera {
   constructor(params) {
     this._params = params;
@@ -499,7 +510,9 @@ class ThirdPersonCamera {
     this._camera.lookAt(this._currentLookat);
   }
 }
-class CharacterControllerDemo {
+
+
+class ThirdPersonCameraDemo {
   constructor() {
     this._Initialize();
   }
@@ -549,20 +562,15 @@ class CharacterControllerDemo {
     light = new THREE.AmbientLight(0xFFFFFF, 0.25);
     this._scene.add(light);
 
-    const controls = new OrbitControls(
-      this._camera, this._threejs.domElement);
-    controls.target.set(0, 10, 0);
-    controls.update();
-
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
-        '/image/bluecloud_ft.jpg',
-        '/image/bluecloud_bk.jpg',
-        '/image/bluecloud_up.jpg',
-        '/image/bluecloud_dn.jpg',
-        '/image/bluecloud_rt.jpg',
-        '/image/bluecloud_lf.jpg',
-      ]);
+        './resources/posx.jpg',
+        './resources/negx.jpg',
+        './resources/posy.jpg',
+        './resources/negy.jpg',
+        './resources/posz.jpg',
+        './resources/negz.jpg',
+    ]);
     texture.encoding = THREE.sRGBEncoding;
     this._scene.background = texture;
 
@@ -596,38 +604,6 @@ class CharacterControllerDemo {
     });
   }
 
-  _LoadAnimatedModelAndPlay(path, modelFile, animFile, offset) {
-    const loader = new FBXLoader();
-    loader.setPath(path);
-    loader.load(modelFile, (fbx) => {
-      fbx.scale.setScalar(0.1);
-      fbx.traverse(c => {
-        c.castShadow = true;
-      });
-      fbx.position.copy(offset);
-
-      const anim = new FBXLoader();
-      anim.setPath(path);
-      anim.load(animFile, (anim) => {
-        const m = new THREE.AnimationMixer(fbx);
-        this._mixers.push(m);
-        const idle = m.clipAction(anim.animations[0]);
-        idle.play();
-      });
-      this._scene.add(fbx);
-    });
-  }
-
-  _LoadModel() {
-    const loader = new GLTFLoader();
-    loader.load('./resources/thing.glb', (gltf) => {
-      gltf.scene.traverse(c => {
-        c.castShadow = true;
-      });
-      this._scene.add(gltf.scene);
-    });
-  }
-
   _OnWindowResize() {
     this._camera.aspect = window.innerWidth / window.innerHeight;
     this._camera.updateProjectionMatrix();
@@ -648,7 +624,6 @@ class CharacterControllerDemo {
     });
   }
 
-  // Update camera each frame
   _Step(timeElapsed) {
     const timeElapsedS = timeElapsed * 0.001;
     if (this._mixers) {
@@ -659,7 +634,7 @@ class CharacterControllerDemo {
       this._controls.Update(timeElapsedS);
     }
 
-    // this._thirdPersonCamera.Update(timeElapsedS);
+    this._thirdPersonCamera.Update(timeElapsedS);
   }
 }
 
@@ -667,5 +642,5 @@ class CharacterControllerDemo {
 let _APP = null;
 
 window.addEventListener('DOMContentLoaded', () => {
-  _APP = new CharacterControllerDemo();
+  _APP = new ThirdPersonCameraDemo();
 });
