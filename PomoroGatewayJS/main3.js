@@ -460,6 +460,13 @@ class IdleState extends State {
   }
 };
 
+class ThirdPersonCamera {
+  constructor(params) 
+  {
+    this._params = params;
+    this._camera = params.camera;
+  }
+}
 
 class CharacterControllerDemo {
   constructor() {
@@ -488,6 +495,10 @@ class CharacterControllerDemo {
     const far = 1000.0;
     this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     this._camera.position.set(25, 10, 25);
+
+    this._thirdPersonCamera = new ThirdPersonCamera({
+      camera: this._camera,
+    })
 
     this._scene = new THREE.Scene();
 
@@ -605,6 +616,7 @@ class CharacterControllerDemo {
     });
   }
 
+  // Update camera each frame
   _Step(timeElapsed) {
     const timeElapsedS = timeElapsed * 0.001;
     if (this._mixers) {
@@ -614,6 +626,8 @@ class CharacterControllerDemo {
     if (this._controls) {
       this._controls.Update(timeElapsedS);
     }
+
+    this._thirdPersonCamera.Update(timeElapsedS);
   }
 }
 
