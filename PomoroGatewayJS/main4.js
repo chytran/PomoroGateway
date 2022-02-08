@@ -584,6 +584,11 @@ class PomoroGateway {
     plane.rotation.x = -Math.PI / 2;
     this._scene.add(plane);
 
+    // Gateway doors
+    const door1 = new THREE.Mesh(
+      
+    )
+
     this._mixers = [];
     this._previousRAF = null;
 
