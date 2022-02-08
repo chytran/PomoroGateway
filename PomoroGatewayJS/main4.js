@@ -585,9 +585,28 @@ class PomoroGateway {
     this._scene.add(plane);
 
     // Gateway doors
+    var material = new THREE.MeshNormalMaterial();
+    material.side = THREE.DoubleSide;
+
+    const door = new THREE.Mesh(
+        new THREE.PlaneGeometry(17, 45, 100, 200),
+        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: true })
+    );
+    door.position.x += 20
+    door.position.y += 2;
+    door.position.z += 30;
+    door.receiveShadow = true;
+    this._scene.add(door);
+
     const door1 = new THREE.Mesh(
-      
-    )
+      new THREE.PlaneGeometry(17, 45, 100, 200),
+      new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: true })
+    );
+    door1.position.x -= 20
+    door1.position.y += 2;
+    door1.position.z += 30;
+    door1.receiveShadow = true;
+    this._scene.add(door1);
 
     this._mixers = [];
     this._previousRAF = null;
