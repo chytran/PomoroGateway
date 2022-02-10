@@ -2,136 +2,83 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 
 import Stats from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/libs/stats.module.js';
 
-let container, stats;
-let camera, scene, raycaster, renderer;
+var width = window.innerWidth;
+var height = window.innerHeight;
 
-let INTERSECTED;
-let theta = 0;
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(width, height);
+document.body.appendChild(renderer.domElement);
 
-const pointer = new THREE.Vector2();
-const radius = 100;
+var scene = new THREE.Scene();
 
-init();
+var group1 = new THREE.Object3D();
+var cubeGeometry = new THREE.CubeGeometry(50, 50, 50);
+
+var cube1 = new THREE.Mesh(cubeGeometry);
+cube1.position.set(0, 50, 50);
+var cube2 = new THREE.Mesh(cubeGeometry);
+cube2.position.set(0, 150, 50);
+
+cube1.userData.parent = group1;
+cube2.userData.parent = group1;
+group1.add(cube1);
+group1.add(cube2);
+group1.name = "Group 1";
+
+var group2 = new THREE.Object3D();
+var cube3 = new THREE.Mesh(cubeGeometry);
+cube3.position.set(300, 50, 50);
+var cube4 = new THREE.Mesh(cubeGeometry);
+cube4.position.set(300, 150, 50);
+
+cube3.userData.parent = group2;
+cube4.userData.parent = group2;
+group2.add(cube3);
+group2.add(cube4);
+group2.name = "Group 2";
+
+console.log(group1);
+
+scene.add(group1);
+scene.add(group2);
+
+var camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
+camera.position.z = 500;
+
+
+render();
 animate();
 
-function init() {
-
-    container = document.createElement( 'div' );
-    document.body.appendChild( container );
-
-    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
-
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xf0f0f0 );
-
-    const light = new THREE.DirectionalLight( 0xffffff, 1 );
-    light.position.set( 1, 1, 1 ).normalize();
-    scene.add( light );
-
-    const geometry = new THREE.BoxGeometry( 20, 20, 20 );
-
-    for ( let i = 0; i < 2000; i ++ ) {
-
-        const object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-
-        object.position.x = Math.random() * 800 - 400;
-        object.position.y = Math.random() * 800 - 400;
-        object.position.z = Math.random() * 800 - 400;
-
-        object.rotation.x = Math.random() * 2 * Math.PI;
-        object.rotation.y = Math.random() * 2 * Math.PI;
-        object.rotation.z = Math.random() * 2 * Math.PI;
-
-        object.scale.x = Math.random() + 0.5;
-        object.scale.y = Math.random() + 0.5;
-        object.scale.z = Math.random() + 0.5;
-
-        scene.add( object );
-
-    }
-
-    raycaster = new THREE.Raycaster();
-
-    renderer = new THREE.WebGLRenderer();
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    container.appendChild( renderer.domElement );
-
-    stats = new Stats();
-    container.appendChild( stats.dom );
-
-    document.addEventListener( 'mousemove', onPointerMove );
-
-    //
-
-    window.addEventListener( 'resize', onWindowResize );
-
-}
-
-function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
-
-function onPointerMove( event ) {
-
-    pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-}
-
-//
 
 function animate() {
-
-    requestAnimationFrame( animate );
-
-    render();
-    stats.update();
+  requestAnimationFrame( animate );
 
 }
 
 function render() {
-
-    theta += 0.1;
-
-    camera.position.x = radius * Math.sin( THREE.MathUtils.degToRad( theta ) );
-    camera.position.y = radius * Math.sin( THREE.MathUtils.degToRad( theta ) );
-    camera.position.z = radius * Math.cos( THREE.MathUtils.degToRad( theta ) );
-    camera.lookAt( scene.position );
-
-    camera.updateMatrixWorld();
-
-    // find intersections
-
-    raycaster.setFromCamera( pointer, camera );
-
-    const intersects = raycaster.intersectObjects( scene.children, false );
-
-    if ( intersects.length > 0 ) {
-
-        if ( INTERSECTED != intersects[ 0 ].object ) {
-
-            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
-            INTERSECTED = intersects[ 0 ].object;
-            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-            INTERSECTED.material.emissive.setHex( 0xff0000 );
-
-        }
-
-    } else {
-
-        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
-        INTERSECTED = null;
-
-    }
-
-    renderer.render( scene, camera );
-
+  renderer.render( scene, camera );
 }
+
+
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+
+
+function onMouseMove( event ) {
+  // calculate mouse position in normalized device coordinates
+  // (-1 to +1) for both components
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  // update the picking ray with the camera and mouse position
+//   raycaster.setFromCamera( mouse, camera );
+
+  // calculate objects intersecting the picking ray
+//   var intersects = raycaster.intersectObjects( scene.children, true );
+//   if(intersects && intersects[0]) {
+//     console.log('GROUP IS ' + intersects[0].object.userData.parent.name)
+//   }
+}
+
+document.addEventListener('mousemove', onMouseMove)

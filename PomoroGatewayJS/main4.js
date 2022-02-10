@@ -578,10 +578,14 @@ class PomoroGateway {
     texture.encoding = THREE.sRGBEncoding;
     this._scene.background = texture;
 
+    var textureLoader = new THREE.TextureLoader();
+    const floorTexture = textureLoader.load('/image/floor.jpg');
+
     const plane = new THREE.Mesh(
-        new THREE.PlaneGeometry(100, 100, 10, 10),
+        new THREE.PlaneGeometry(300, 300, 300, 300),
         new THREE.MeshStandardMaterial({
             color: 0x808080,
+            map: floorTexture,
           }));
     plane.castShadow = false;
     plane.receiveShadow = true;
@@ -592,33 +596,33 @@ class PomoroGateway {
     var material = new THREE.MeshNormalMaterial();
     material.side = THREE.DoubleSide;
 
-    const door = new THREE.Mesh(
-        new THREE.PlaneGeometry(17, 45, 100, 200),
-        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: true })
-    );
-    door.position.x += 20
-    door.position.y += 2;
-    door.position.z += 30;
-    door.receiveShadow = true;
-    this._scene.add(door);
+    // const door = new THREE.Mesh(
+    //     new THREE.PlaneGeometry(17, 45, 100, 200),
+    //     new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: true })
+    // );
+    // door.position.x += 20
+    // door.position.y += 2;
+    // door.position.z += 30;
+    // door.receiveShadow = true;
+    // this._scene.add(door);
     // targetList.push(door);
 
-    const door1 = new THREE.Mesh(
-      new THREE.PlaneGeometry(17, 45, 100, 200),
-      new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: true })
-    );
-    door1.position.x -= 20
-    door1.position.y += 2;
-    door1.position.z += 30;
-    door1.receiveShadow = true;
-    this._scene.add(door1);
+    // const door1 = new THREE.Mesh(
+    //   new THREE.PlaneGeometry(17, 45, 100, 200),
+    //   new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: true })
+    // );
+    // door1.position.x -= 20
+    // door1.position.y += 2;
+    // door1.position.z += 30;
+    // door1.receiveShadow = true;
+    // this._scene.add(door1);
     // targetList.push(door1);
 
 
     this._mixers = [];
     this._previousRAF = null;
 
-    const pointer = new THREE.Vector2();
+    var pointer = new THREE.Vector2();
     var targetList = [];
 
     function onPointerMove( event ) {
@@ -629,6 +633,20 @@ class PomoroGateway {
       pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     
+      // var w = window.innerWidth;
+      // var h = window.innerHeight;
+
+      // var camera = new THREE.PerspectiveCamera(60, w / h, 1, 1000);
+      // camera.position.z = 500;
+      // var raycaster = new THREE.Raycaster();
+      // // update the picking ray with the camera and mouse position
+      // raycaster.setFromCamera( pointer, camera );
+
+      // // calculate objects intersecting the picking ray
+      // var intersects = raycaster.intersectObjects( this._scene.children, true );
+      // if(intersects && intersects[0]) {
+      //   console.log('GROUP IS ' + intersects[0].object.userData.parent.name)
+      // }
     }
 
 
@@ -641,9 +659,28 @@ class PomoroGateway {
 
     const intersects = this._raycaster.intersectObjects( this._scene.children );
 
-    for (let i = 0; i < intersects.length; i++) {
-      console.log("intersect");
+    var group1 = new THREE.Object3D();
+
+    console.log(door);
+    // var group1 = new THREE.Object3D();
+    door.userData.parent = group1;
+    door1.userData.parent = group1;
+    group1.add(door);
+    group1.add(door1);
+    group1.name = "Group 1";
+
+    console.log(group1);
+
+    this._scene.add(group1);
+
+    if(intersects && intersects[0]) {
+      console.log('GROUP IS ' + intersects[0].object.userData.parent)
     }
+    // for ( let i = 0; i < intersects.length; i ++ ) {
+    //   // if (intersects[i].object.)
+    //   intersects[ i ].object.material.color.set( 0xff0000 );
+  
+    // }
   }
 
 //   _onDocumentMouseDown( event ) {
