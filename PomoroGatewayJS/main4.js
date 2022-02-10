@@ -601,6 +601,7 @@ class PomoroGateway {
     door.position.z += 30;
     door.receiveShadow = true;
     this._scene.add(door);
+    // targetList.push(door);
 
     const door1 = new THREE.Mesh(
       new THREE.PlaneGeometry(17, 45, 100, 200),
@@ -611,13 +612,55 @@ class PomoroGateway {
     door1.position.z += 30;
     door1.receiveShadow = true;
     this._scene.add(door1);
+    // targetList.push(door1);
+
 
     this._mixers = [];
     this._previousRAF = null;
 
+    const pointer = new THREE.Vector2();
+    var targetList = [];
+
+    function onPointerMove( event ) {
+
+      // calculate pointer position in normalized device coordinates
+      // (-1 to +1) for both components
+    
+      pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    
+    }
+
+
     this._LoadAnimatedModel();
     this._RAF();
+    document.addEventListener( 'mousemove', onPointerMove );
+    // document.addEventListener( 'mousedown', this._onDocumentMouseDown(), false );
+
+    this._raycaster.setFromCamera(pointer, this._camera);
+
+    const intersects = this._raycaster.intersectObjects( this._scene.children );
+
+    for (let i = 0; i < intersects.length; i++) {
+      console.log("intersect");
+    }
   }
+
+//   _onDocumentMouseDown( event ) {
+//     // update the mouse variable
+//     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+//     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+//     var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+//     var ray = new THREE.Raycaster( this._camera.position, vector.sub( camera.position ).normalize() );
+
+//     var intersects = ray.intersectObjects( targetList );
+
+//     if ( intersects.length > 0 )
+//     {       
+//         console.log("intersected");
+//     }
+// }
 
   _LoadAnimatedModel() {
     const params = {
@@ -649,6 +692,7 @@ class PomoroGateway {
       this._threejs.render(this._scene, this._camera);
       this._Step(t - this._previousRAF);
       this._previousRAF = t;
+
 
       // this._raycaster.setFromCamera( this._pointer, this._camera );
       // const intersects = this._raycaster.intersectObject( this._scene.children );
