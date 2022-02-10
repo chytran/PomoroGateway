@@ -528,6 +528,9 @@ class PomoroGateway {
     this._threejs.setPixelRatio(window.devicePixelRatio);
     this._threejs.setSize(window.innerWidth, window.innerHeight);
 
+    this._raycaster = new THREE.Raycaster();
+    this._pointer = new THREE.Vector2();
+
     document.body.appendChild(this._threejs.domElement);
 
     window.addEventListener('resize', () => {
@@ -646,6 +649,13 @@ class PomoroGateway {
       this._threejs.render(this._scene, this._camera);
       this._Step(t - this._previousRAF);
       this._previousRAF = t;
+
+      // this._raycaster.setFromCamera( this._pointer, this._camera );
+      // const intersects = this._raycaster.intersectObject( this._scene.children );
+      // if (intersects.length > 0) {
+      //   console.log(intersects[0].object.geometry.attributes.color)
+      // }
+
     });
   }
 
@@ -670,3 +680,7 @@ let _APP = null;
 window.addEventListener('DOMContentLoaded', () => {
   _APP = new PomoroGateway();
 });
+
+
+
+
